@@ -9,7 +9,7 @@ sheet_url = 'https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K
 
 print('INITIALISING ...')
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_p12_keyfile('fantanobot@fantanobot.iam.gserviceaccount.com', 'securecret.p12', os.environ['CERT_PASS'])
+credentials = ServiceAccountCredentials.from_p12_keyfile('fantanobot@fantanobot.iam.gserviceaccount.com', 'securecert.p12', os.environ['CERT_PASS'])
 gc = gspread.authorize(credentials)
 sheet = gc.open_by_url(sheet_url).worksheet('All Reviews')
 
