@@ -17,6 +17,7 @@ sheet = gc.open_by_url(sheet_url).worksheet('All Reviews')
 footer = "\n\nAll scores sourced from [here](https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0).\n\n---\n^(I am a bot and this action was performed automatically)  \n^(Send me a PM to provide feedback)"
 
 def retrieve_album(album_name):
+    album_name = album_name.strip()
     print('retrieving album', album_name, '...')
     try:
         cell = sheet.find(album_name)
@@ -29,6 +30,7 @@ def retrieve_album(album_name):
         return None
 
 def retrieve_artist(artist_name):
+    artist_name = artist_name.strip()
     print('retrieving artist', artist_name, '...')
     try:
         albums = []
@@ -60,7 +62,7 @@ def run(client, replied):
 
         find = search('!fantanobot (.*)', comment.body)
         if find is not None:
-            print('found comment: ', find.group(1))
+            print('found comment:', find.group(1))
             term = find.group(1)
             response = retrieve_album(term)
             if response is None:
