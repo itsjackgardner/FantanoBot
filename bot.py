@@ -62,6 +62,9 @@ def login():
 
 def run(client):
     for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
+        if mc.get(str(comment.id)) is not None:
+            print(comment.body)
+            print()
         if mc.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
 
@@ -78,20 +81,20 @@ def run(client):
                 # comment.reply(response + footer)
                 # mc.set(str(comment.id), "True")
 
-# client = login()
-# run(client)
+client = login()
+run(client)
 
-mc.set("e24et4b", "True")
-mc.set("e24obb0", "True")
-mc.set("e24oxj3", "True")
-mc.set("e24rvj6", "True")
-mc.set("e24z0lj", "True")
-mc.set("e253jqt", "True")
-mc.set("e24nww6", "True")
-mc.set("e24nww6", "True")
-mc.set("e24s0ng", "True")
-mc.set("e24u4ch", "True")
-mc.set("e24wbuc", "True")
-mc.set("e257ctj", "True")
-mc.set("e25f953", "True")
-mc.set("e25k48j", "True")
+# mc.set("e24et4b", "True")
+# mc.set("e24obb0", "True")
+# mc.set("e24oxj3", "True")
+# mc.set("e24rvj6", "True")
+# mc.set("e24z0lj", "True")
+# mc.set("e253jqt", "True")
+# mc.set("e24nww6", "True")
+# mc.set("e24nww6", "True")
+# mc.set("e24s0ng", "True")
+# mc.set("e24u4ch", "True")
+# mc.set("e24wbuc", "True")
+# mc.set("e257ctj", "True")
+# mc.set("e25f953", "True")
+# mc.set("e25k48j", "True")
