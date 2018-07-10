@@ -3,6 +3,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from re import search
 import time
+import os
 import config
 
 sheet_url = 'https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit?usp=sharing'
@@ -45,11 +46,9 @@ def retrieve_artist(artist_name):
 
 def login():
     print('logging in ...')
-    client = praw.Reddit(username=config.username,
-                    password=config.password,
-                    client_id=config.client_id,
-                    client_secret=config.client_secret,
-                    user_agent='FantanoBot responder')
+    client = praw.Reddit(username=os.environ['REDDIT_USER'],
+                         password=os.environ['REDDIT_PASS'],
+                         user_agent='FantanoBot responder')
     return client
 
 def run(client, replied):
