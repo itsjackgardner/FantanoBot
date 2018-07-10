@@ -4,7 +4,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 from re import search
 import time
 import os
-import config
 
 sheet_url = 'https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit?usp=sharing'
 
