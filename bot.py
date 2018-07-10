@@ -24,8 +24,8 @@ def retrieve_album(album_name):
         values = sheet.row_values(cell.row)
         print('success')
         return "Artist: *{0}*  \nAlbum: {1}  \nScore: **{2}**".format(values[0], values[1], values[2])
-    except Exception as e:
-        print(e)
+    except:
+        print('fail')
         return None
 
 def retrieve_artist(artist_name):
@@ -54,9 +54,7 @@ def login():
     return client
 
 def run(client, replied):
-    print('running ...')
-
-    for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
+    for comment in client.subreddit('fantanoforever+hiphopheads+test').comments(limit=None):
         if comment.id in replied or comment.author == client.user.me():
             continue
 
@@ -75,11 +73,10 @@ def run(client, replied):
                     replied.append(comment.id)
                     with open('replied.txt', 'a') as f:
                         f.write(comment.id + '\n')
-                except:
+                except Exception as e:
                     # ratelimit causes a failure
-                    print('comment failed')
+                    print(e)
 
-    print('sleeping ...')
     time.sleep(5)
 
 def get_replied():
@@ -88,7 +85,5 @@ def get_replied():
 
 client = login()
 replied = get_replied()
-print(replied)
 while True:
     run(client, replied)
-    print(replied)
