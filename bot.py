@@ -48,6 +48,8 @@ def login():
     print('logging in ...')
     client = praw.Reddit(username=os.environ['REDDIT_USER'],
                          password=os.environ['REDDIT_PASS'],
+                         client_id=os.environ['CLIENT_ID'],
+                         client_secret=os.environ['CLIENT_SECRET'],
                          user_agent='FantanoBot responder')
     return client
 
