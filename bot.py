@@ -1,6 +1,7 @@
 import praw
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import bmemcached
 from re import search
 import time
 import os
@@ -13,6 +14,10 @@ scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/au
 credentials = ServiceAccountCredentials.from_p12_keyfile(service_account, 'securecert.p12', os.environ['CERT_PASS'], scope)
 gc = gspread.authorize(credentials)
 sheet = gc.open_by_url(sheet_url).worksheet('All Reviews')
+
+mc = bmemcached.Client(os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
+     os.environ.get('MEMCACHEDCLOUD_USERNAME'),
+     os.environ.get('MEMCACHEDCLOUD_PASSWORD'))
 
 footer = "\n\nAll scores sourced from [here](https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0).\n\n---\n^(I am a bot and this action was performed automatically)  \n^(Send me a PM to provide feedback)"
 
@@ -55,9 +60,9 @@ def login():
                          user_agent='FantanoBot responder')
     return client
 
-def run(client, replied):
-    for comment in client.subreddit('fantanoforever+hiphopheads+test').comments(limit=None):
-        if comment.id in replied or comment.author == client.user.me():
+def run(client):
+    for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
+        if mc.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
 
         find = search('!fantanobot (.*)', comment.body)
@@ -70,22 +75,23 @@ def run(client, replied):
 
             if response is not None:
                 print(response)
-                try:
-                    comment.reply(response + footer)
-                    replied.append(comment.id)
-                    with open('replied.txt', 'a') as f:
-                        f.write(comment.id + '\n')
-                except Exception as e:
-                    # ratelimit causes a failure
-                    print(e)
+                # comment.reply(response + footer)
+                # mc.set(str(comment.id), "True")
 
-    time.sleep(5)
+# client = login()
+# run(client)
 
-def get_replied():
-    with open('replied.txt', 'r') as f:
-        return [i for i in f.read().split('\n') if i != '']
-
-client = login()
-replied = get_replied()
-while True:
-    run(client, replied)
+mc.set("e24et4b", "True")
+mc.set("e24obb0", "True")
+mc.set("e24oxj3", "True")
+mc.set("e24rvj6", "True")
+mc.set("e24z0lj", "True")
+mc.set("e253jqt", "True")
+mc.set("e24nww6", "True")
+mc.set("e24nww6", "True")
+mc.set("e24s0ng", "True")
+mc.set("e24u4ch", "True")
+mc.set("e24wbuc", "True")
+mc.set("e257ctj", "True")
+mc.set("e25f953", "True")
+mc.set("e25k48j", "True")
