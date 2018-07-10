@@ -6,10 +6,11 @@ import time
 import os
 
 sheet_url = 'https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit?usp=sharing'
+service_account = 'fantanobot@fantanobot.iam.gserviceaccount.com'
 
 print('INITIALISING ...')
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_p12_keyfile('fantanobot@fantanobot.iam.gserviceaccount.com', 'securecert.p12', os.environ['CERT_PASS'])
+credentials = ServiceAccountCredentials.from_p12_keyfile(service_account, 'securecert.p12', os.environ['CERT_PASS'], scope)
 gc = gspread.authorize(credentials)
 sheet = gc.open_by_url(sheet_url).worksheet('All Reviews')
 
