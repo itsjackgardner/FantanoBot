@@ -24,8 +24,8 @@ def retrieve_album(album_name):
         values = sheet.row_values(cell.row)
         print('success')
         return "Artist: *{0}*  \nAlbum: {1}  \nScore: **{2}**".format(values[0], values[1], values[2])
-    except:
-        print('fail')
+    except Exception as e:
+        print(e)
         return None
 
 def retrieve_artist(artist_name):
