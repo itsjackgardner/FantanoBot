@@ -14,7 +14,7 @@ credentials = ServiceAccountCredentials.from_p12_keyfile(service_account, 'secur
 gc = gspread.authorize(credentials)
 sheet = gc.open_by_url(sheet_url).worksheet('All Reviews')
 
-footer = "\n\n---\n^(I am a bot and this action was performed automatically)  \n^(Send me a PM to provide feedback)"
+footer = "\n\nAll scores sourced from [here](https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0).\n\n---\n^(I am a bot and this action was performed automatically)  \n^(Send me a PM to provide feedback)"
 
 def retrieve_album(album_name):
     print('retrieving album', album_name, '...')
@@ -23,7 +23,7 @@ def retrieve_album(album_name):
         assert(cell.col == 2)
         values = sheet.row_values(cell.row)
         print('success')
-        return 'Artist: *{0}*  \nAlbum: {1}  \nScore: **{2}**'.format(values[0], values[1], values[2])
+        return "Artist: *{0}*  \nAlbum: {1}  \nScore: **{2}**".format(values[0], values[1], values[2])
     except:
         print('fail')
         return None
@@ -39,7 +39,7 @@ def retrieve_artist(artist_name):
             albums.append('{0} - **{1}**'.format(values[1], values[2]))
         assert(len(albums) > 0)
         print('success')
-        return 'Album scores for *{0}*:\n\n{1}'.format(artist_name, '  \n'.join(albums))
+        return "Fantano's album scores for *{0}*:\n\n{1}".format(artist_name, '  \n'.join(albums))
     except:
         print('fail')
         return None
@@ -56,7 +56,7 @@ def login():
 def run(client, replied):
     print('running ...')
 
-    for comment in client.subreddit('test').comments(limit=None):
+    for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
         if comment.id in replied or comment.author == client.user.me():
             continue
 
