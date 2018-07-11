@@ -40,9 +40,11 @@ def retrieve_artist(artist_name):
     try:
         albums = []
         for cell in sheet.findall(artist_name):
+            print(cell.body)
             if cell.col != 1:
                 continue
             values = sheet.row_values(cell.row)
+            print(values[1])
             albums.append('{0} - **{1}**'.format(values[1], values[2]))
         assert(len(albums) > 0)
         print('success')
@@ -87,8 +89,10 @@ def run(client):
 
             if response is not None:
                 print(response)
-                comment.reply(response + footer)
-                mc.set(str(comment.id), "True")
+                # comment.reply(response + footer)
+                # mc.set(str(comment.id), "True")
+
+mc.delete("e24zzs0")
 
 client = login()
 run(client)
