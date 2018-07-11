@@ -6,20 +6,32 @@ from re import compile, search, IGNORECASE
 import time
 import os
 
-sheet_url = 'https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit?usp=sharing'
+sheet_url = 'https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0'
 service_account = 'fantanobot@fantanobot.iam.gserviceaccount.com'
 
 print('INITIALISING ...')
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_p12_keyfile(service_account, 'securecert.p12', os.environ['CERT_PASS'], scope)
+credentials = ServiceAccountCredentials.from_p12_keyfile(
+    service_account,
+    'securecert.p12',
+    os.environ['CERT_PASS'],
+    scope
+)
 gc = gspread.authorize(credentials)
 sheet = gc.open_by_url(sheet_url).worksheet('All Reviews')
 
-mc = bmemcached.Client(os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
-     os.environ.get('MEMCACHEDCLOUD_USERNAME'),
-     os.environ.get('MEMCACHEDCLOUD_PASSWORD'))
+mc = bmemcached.Client(
+    os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
+    os.environ.get('MEMCACHEDCLOUD_USERNAME'),
+    os.environ.get('MEMCACHEDCLOUD_PASSWORD')
+)
 
-footer = "\n\nAll scores sourced from [here](https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0).\n\n---\n^(I am a bot and this action was performed automatically)  \n^(Send me a PM to provide feedback)"
+footer = (
+    "\n\nAll scores sourced from [here]({link}).\n\n"
+    "---\n"
+    "^(I am a bot and this action was performed automatically)  \n"
+    "^(Send me a PM to provide feedback)"
+).format(link = sheet_url)
 
 def retrieve_album(album_name):
     try:
@@ -56,11 +68,13 @@ def retrieve_artist(artist_name):
 
 def login():
     print('logging in ...')
-    client = praw.Reddit(username=os.environ['REDDIT_USER'],
-                         password=os.environ['REDDIT_PASS'],
-                         client_id=os.environ['CLIENT_ID'],
-                         client_secret=os.environ['CLIENT_SECRET'],
-                         user_agent='FantanoBot responder')
+    client = praw.Reddit(
+        username      = os.environ['REDDIT_USER'],
+        password      = os.environ['REDDIT_PASS'],
+        client_id     = os.environ['CLIENT_ID'],
+        client_secret = os.environ['CLIENT_SECRET'],
+        user_agent    = 'FantanoBot responder'
+    )
     return client
 
 def retrieve(term):
@@ -96,7 +110,7 @@ def run(client):
                 comment.reply(response + footer)
                 mc.set(str(comment.id), "True")
 
-client = login()
-run(client)
+# client = login()
+# run(client)
 
 print("COMPLETE")
