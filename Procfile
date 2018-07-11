@@ -1,2 +1,2 @@
-worker: python3 responder.py
-worker: python3 tracker.py
+responder: python3 responder.py
+tracker: python3 tracker.py
