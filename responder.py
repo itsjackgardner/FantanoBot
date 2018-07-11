@@ -140,6 +140,7 @@ def run(client):
             print(response)
             comment.reply(response + FOOTER)
             db.set(str(comment.id), "True")
+            print("replied")
 
 client = login()
 run(client)
