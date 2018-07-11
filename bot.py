@@ -90,23 +90,5 @@ def run(client):
                 comment.reply(response + footer)
                 mc.set(str(comment.id), "True")
 
-# mc.set("e24quy6", "True")
-# mc.set("e24et4b", "True")
-# mc.set("e24obb0", "True")
-# mc.set("e24oxj3", "True")
-# mc.set("e24rvj6", "True")
-# mc.set("e24z0lj", "True")
-# mc.set("e253jqt", "True")
-# mc.set("e24nww6", "True")
-# mc.set("e24nww6", "True")
-# mc.set("e24s0ng", "True")
-# mc.set("e24u4ch", "True")
-# mc.set("e24wbuc", "True")
-# mc.set("e257ctj", "True")
-# mc.set("e25f95e", "True")
-# mc.set("e25k48j", "True")
-
-mc.delete("e24zzs0")
-
 client = login()
 run(client)
