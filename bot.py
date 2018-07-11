@@ -62,17 +62,17 @@ def login():
 
 def run(client):
     for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
-        if mc.get(str(comment.id)) is not None:
-            print(comment.id)
-            print(comment.body)
-            print()
+        # if mc.get(str(comment.id)) is not None:
+        #     print(comment.id)
+        #     print(comment.body)
+        #     print()
         if mc.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
 
         find = search('!fantanobot (.*)', comment.body)
         if find is not None:
-            print('found comment:', find.group(1))
-            print(comment.id)
+            print('found comment:', comment.id)
+            print('term:', find.group(1))
             term = find.group(1)
             response = retrieve_album(term)
             if response is None:
@@ -80,10 +80,10 @@ def run(client):
 
             if response is not None:
                 print(response)
-                # comment.reply(response + footer)
-                # mc.set(str(comment.id), "True")
+                comment.reply(response + footer)
+                mc.set(str(comment.id), "True")
 
-mc.set("e24quy6", "True")
+# mc.set("e24quy6", "True")
 # mc.set("e24et4b", "True")
 # mc.set("e24obb0", "True")
 # mc.set("e24oxj3", "True")
