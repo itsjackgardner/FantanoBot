@@ -83,9 +83,7 @@ def run(client):
                 # comment.reply(response + footer)
                 # mc.set(str(comment.id), "True")
 
-client = login()
-run(client)
-
+mc.set("e24quy6", "True")
 # mc.set("e24et4b", "True")
 # mc.set("e24obb0", "True")
 # mc.set("e24oxj3", "True")
@@ -100,3 +98,6 @@ run(client)
 # mc.set("e257ctj", "True")
 # mc.set("e25f953", "True")
 # mc.set("e25k48j", "True")
+
+client = login()
+run(client)
