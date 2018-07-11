@@ -63,7 +63,7 @@ def login():
     return client
 
 def retrieve(term):
-    regex = compile(term, 'i')
+    regex = compile(str(term), 'i')
     response = retrieve_album(regex)
     if response is None:
         response = retrieve_artist(regex)
