@@ -22,7 +22,6 @@ mc = bmemcached.Client(os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
 footer = "\n\nAll scores sourced from [here](https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0).\n\n---\n^(I am a bot and this action was performed automatically)  \n^(Send me a PM to provide feedback)"
 
 def retrieve_album(album_name):
-    print('retrieving album', album_name, '...')
     try:
         cell = sheet.find(album_name)
         assert(cell.col == 2)
@@ -35,20 +34,17 @@ def retrieve_album(album_name):
         return None
 
 def retrieve_artist(artist_name):
-    print('retrieving artist', artist_name, '...')
     try:
         albums = []
         found = sheet.findall(artist_name)
         artist = sheet.row_values(found[0].row)[0]
         for cell in found:
-            # print(cell.value)
             if cell.col != 1:
                 continue
             values = sheet.row_values(cell.row)
             temp_artist = values[0]
             if len(temp_artist) < len(artist):
                 artist = temp_artist
-            # print(values[1])
             albums.append('{0} - **{1}**'.format(values[1], values[2]))
         assert(len(albums) > 0)
         print('success')
@@ -69,14 +65,16 @@ def login():
 
 def retrieve(term):
     regex = compile(term, IGNORECASE)
+    print('retrieving album', term, '...')
     response = retrieve_album(regex)
     if response is None:
+        print('retrieving artist', term, '...')
         response = retrieve_artist(regex)
     return response
 
 def run(client):
     print('running ...')
-    for comment in client.subreddit('fantanoforever+hiphopheads+test').comments(limit=None):
+    for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
         if mc.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
 
