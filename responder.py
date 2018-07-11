@@ -110,7 +110,7 @@ def run(client):
                 comment.reply(response + footer)
                 mc.set(str(comment.id), "True")
 
-# client = login()
-# run(client)
+client = login()
+run(client)
 
 print("COMPLETE")
