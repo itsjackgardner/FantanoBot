@@ -1,6 +1,5 @@
 import os
 import praw
-import config
 
 def login():
     client = praw.Reddit(
