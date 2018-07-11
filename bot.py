@@ -22,7 +22,6 @@ mc = bmemcached.Client(os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
 footer = "\n\nAll scores sourced from [here](https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0).\n\n---\n^(I am a bot and this action was performed automatically)  \n^(Send me a PM to provide feedback)"
 
 def retrieve_album(album_name):
-    album_name = album_name.strip()
     print('retrieving album', album_name, '...')
     try:
         cell = sheet.find(album_name)
@@ -35,16 +34,15 @@ def retrieve_album(album_name):
         return None
 
 def retrieve_artist(artist_name):
-    artist_name = artist_name.strip()
     print('retrieving artist', artist_name, '...')
     try:
         albums = []
         for cell in sheet.findall(artist_name):
-            print(cell.value)
+            # print(cell.value)
             if cell.col != 1:
                 continue
             values = sheet.row_values(cell.row)
-            print(values[1])
+            # print(values[1])
             albums.append('{0} - **{1}**'.format(values[1], values[2]))
         assert(len(albums) > 0)
         print('success')
@@ -69,6 +67,7 @@ def retrieve(term):
     return response
 
 def run(client):
+    print('running ...')
     for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
         if mc.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
@@ -77,7 +76,7 @@ def run(client):
         if find is not None:
             print('found comment:', comment.id)
             print('term:', find.group(1))
-            term = find.group(1)
+            term = find.group(1).strip()
 
             response = retrieve(term)
             if response is None and "and" in term:
@@ -92,7 +91,7 @@ def run(client):
                 comment.reply(response + footer)
                 mc.set(str(comment.id), "True")
 
-mc.add("e24zzs0", "True")
-
 client = login()
 run(client)
+
+print("COMPLETE")
