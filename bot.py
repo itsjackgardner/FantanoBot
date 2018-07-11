@@ -63,6 +63,7 @@ def login():
 def run(client):
     for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
         if mc.get(str(comment.id)) is not None:
+            print(comment.id)
             print(comment.body)
             print()
         if mc.get(str(comment.id)) is not None or comment.author == client.user.me():
@@ -71,6 +72,7 @@ def run(client):
         find = search('!fantanobot (.*)', comment.body)
         if find is not None:
             print('found comment:', find.group(1))
+            print(comment.id)
             term = find.group(1)
             response = retrieve_album(term)
             if response is None:
