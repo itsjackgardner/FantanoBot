@@ -75,7 +75,7 @@ def retrieve_artist(artist_name):
         found = sheet.findall(artist_name)
 
         # Artist name, always smallest because of collaborative albums
-        artist = sheet.cell(found[0].row, ARTIST_COL)
+        artist = sheet.cell(found[0].row, ARTIST_COL).value
 
         for cell in found:
             if cell.col != ARTIST_COL:
