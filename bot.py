@@ -38,16 +38,21 @@ def retrieve_artist(artist_name):
     print('retrieving artist', artist_name, '...')
     try:
         albums = []
-        for cell in sheet.findall(artist_name):
+        found = sheet.findall(artist_name)
+        artist = sheet.row_values(found[0].row)[0]
+        for cell in found:
             # print(cell.value)
             if cell.col != 1:
                 continue
             values = sheet.row_values(cell.row)
+            temp_artist = values[0]
+            if len(temp_artist) < len(artist):
+                artist = temp_artist
             # print(values[1])
             albums.append('{0} - **{1}**'.format(values[1], values[2]))
         assert(len(albums) > 0)
         print('success')
-        return "Fantano's album scores for *{0}*:\n\n{1}".format(artist_name, '  \n'.join(albums))
+        return "Fantano's album scores for *{0}*:\n\n{1}".format(artist, '  \n'.join(albums))
     except Exception as e:
         print('fail')
         print(e)
@@ -71,7 +76,7 @@ def retrieve(term):
 
 def run(client):
     print('running ...')
-    for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
+    for comment in client.subreddit('fantanoforever+hiphopheads+test').comments(limit=None):
         if mc.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
 
