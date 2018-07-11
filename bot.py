@@ -60,12 +60,14 @@ def login():
                          user_agent='FantanoBot responder')
     return client
 
+def retrieve(term):
+    response = retrieve_album(term)
+    if response is None:
+        response = retrieve_artist(term)
+    return response
+
 def run(client):
     for comment in client.subreddit('fantanoforever+hiphopheads').comments(limit=None):
-        # if mc.get(str(comment.id)) is not None:
-        #     print(comment.id)
-        #     print(comment.body)
-        #     print()
         if mc.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
 
@@ -74,14 +76,19 @@ def run(client):
             print('found comment:', comment.id)
             print('term:', find.group(1))
             term = find.group(1)
-            response = retrieve_album(term)
-            if response is None:
-                response = retrieve_artist(term)
+
+            response = retrieve(term)
+            if response is None and "and" in term:
+                term = term.replace("and", "&")
+                response = retrieve(term)
+            elif response is None and "&" in term:
+                term = term.replace("&", "and")
+                response = retrieve(term)
 
             if response is not None:
                 print(response)
                 comment.reply(response + footer)
-                
+
             mc.set(str(comment.id), "True")
 
 # mc.set("e24quy6", "True")
