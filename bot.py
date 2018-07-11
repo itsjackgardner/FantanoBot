@@ -2,7 +2,7 @@ import praw
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import bmemcached
-from re import compile, search
+from re import compile, search, IGNORECASE
 import time
 import os
 
@@ -63,7 +63,7 @@ def login():
     return client
 
 def retrieve(term):
-    regex = compile(str(term), 'i')
+    regex = compile(term, IGNORECASE)
     response = retrieve_album(regex)
     if response is None:
         response = retrieve_artist(regex)
