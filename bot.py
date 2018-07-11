@@ -2,7 +2,7 @@ import praw
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import bmemcached
-from re import search
+from re import compile, search
 import time
 import os
 
@@ -30,6 +30,7 @@ def retrieve_album(album_name):
         print('success')
         return "Artist: *{0}*  \nAlbum: {1}  \nScore: **{2}**".format(values[0], values[1], values[2])
     except Exception as e:
+        print('fail')
         print(e)
         return None
 
@@ -48,6 +49,7 @@ def retrieve_artist(artist_name):
         print('success')
         return "Fantano's album scores for *{0}*:\n\n{1}".format(artist_name, '  \n'.join(albums))
     except Exception as e:
+        print('fail')
         print(e)
         return None
 
@@ -61,9 +63,10 @@ def login():
     return client
 
 def retrieve(term):
-    response = retrieve_album(term)
+    regex = compile(term, 'i')
+    response = retrieve_album(regex)
     if response is None:
-        response = retrieve_artist(term)
+        response = retrieve_artist(regex)
     return response
 
 def run(client):
@@ -77,14 +80,13 @@ def run(client):
             print('found comment:', comment.id)
             print('term:', find.group(1))
             term = find.group(1).strip()
+    
+            if 'and' in term:
+                term = term.replace('and', '(and|&)')
+            elif '&' in term:
+                term = term.replace('&', '(and|&)')
 
             response = retrieve(term)
-            if response is None and "and" in term:
-                term = term.replace("and", "&")
-                response = retrieve(term)
-            elif response is None and "&" in term:
-                term = term.replace("&", "and")
-                response = retrieve(term)
 
             if response is not None:
                 print(response)
