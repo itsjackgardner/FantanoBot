@@ -11,7 +11,7 @@ ALBUM_COL = 2
 SCORE_COL = 3
 
 SUBREDDITS = 'fantanoforever+hiphopheads'
-COMMAND = compile('!fantanobot (.*)')
+COMMAND = compile('!fantanobot (.*)', IGNORECASE)
 
 URL = 'https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0'
 ACCOUNT = 'fantanobot@fantanobot.iam.gserviceaccount.com'
