@@ -88,8 +88,7 @@ def run(client):
             if response is not None:
                 print(response)
                 comment.reply(response + footer)
-
-            mc.set(str(comment.id), "True")
+                mc.set(str(comment.id), "True")
 
 # mc.set("e24quy6", "True")
 # mc.set("e24et4b", "True")
@@ -106,6 +105,8 @@ def run(client):
 # mc.set("e257ctj", "True")
 # mc.set("e25f95e", "True")
 # mc.set("e25k48j", "True")
+
+mc.delete("e24zzs0")
 
 client = login()
 run(client)
