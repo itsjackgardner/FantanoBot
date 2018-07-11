@@ -40,7 +40,7 @@ def retrieve_artist(artist_name):
     try:
         albums = []
         for cell in sheet.findall(artist_name):
-            print(cell.body)
+            print(cell.value)
             if cell.col != 1:
                 continue
             values = sheet.row_values(cell.row)
