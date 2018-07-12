@@ -22,7 +22,7 @@ print('INITIALISING ...')
 # Connect to google spreadsheet
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-    json.loads(os.environ['CREDENTIALS']),
+    json.loads(os.environ.get('CREDENTIALS')),
     scope
 )
 gc = gspread.authorize(credentials)
@@ -87,8 +87,8 @@ def retrieve_artist(artist_name):
                 artist = temp_artist
 
             albums.append('{album} - **{score}**'.format(
-                album = values[1],
-                score = values[2]
+                album = values[ALBUM_COL - 1],
+                score = values[SCORE_COL - 1]
             ))
 
         assert(len(albums) > 0)
@@ -102,10 +102,10 @@ def retrieve_artist(artist_name):
 def login():
     print('logging in ...')
     client = praw.Reddit(
-        username      = os.environ['REDDIT_USER'],
-        password      = os.environ['REDDIT_PASS'],
-        client_id     = os.environ['CLIENT_ID'],
-        client_secret = os.environ['CLIENT_SECRET'],
+        username      = os.environ.get('REDDIT_USER'),
+        password      = os.environ.get('REDDIT_PASS'),
+        client_id     = os.environ.get('CLIENT_ID'),
+        client_secret = os.environ.get('CLIENT_SECRET'),
         user_agent    = 'FantanoBot responder'
     )
     return client
@@ -138,8 +138,8 @@ def run(client):
 
         if response is not None:
             print(response)
-            comment.reply(response + FOOTER)
-            db.set(str(comment.id), "True")
+            # comment.reply(response + FOOTER)
+            # db.set(str(comment.id), "True")
             print("replied")
 
 client = login()
