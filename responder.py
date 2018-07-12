@@ -5,6 +5,7 @@ import bmemcached
 from re import compile, search, IGNORECASE
 import time
 import os
+import json
 
 ARTIST_COL = 1
 ALBUM_COL = 2
@@ -20,10 +21,8 @@ print('INITIALISING ...')
 
 # Connect to google spreadsheet
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_p12_keyfile(
-    ACCOUNT,
-    'securecert.p12',
-    os.environ['CERT_PASS'],
+credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+    json.loads(os.environ['CREDENTIALS']),
     scope
 )
 gc = gspread.authorize(credentials)
@@ -138,8 +137,8 @@ def run(client):
 
         if response is not None:
             print(response)
-            comment.reply(response + FOOTER)
-            db.set(str(comment.id), "True")
+            # comment.reply(response + FOOTER)
+            # db.set(str(comment.id), "True")
             print("replied")
 
 client = login()

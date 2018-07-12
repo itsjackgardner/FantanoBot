@@ -1,5 +1,7 @@
 .DS_Store
-config.py
+set_env.sh
+FantanoBot-62fcbd33596c.json
+securecert.p12
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
