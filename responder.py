@@ -59,9 +59,9 @@ def retrieve_album(album_name):
         values = sheet.row_values(cell.row)
         print('success')
         return "Artist: *{artist}*  \nAlbum: {album}  \nScore: **{score}**".format(
-            artist = values[ARTIST_COL],
-            album  = values[ALBUM_COL],
-            score  = values[SCORE_COL]
+            artist = values[ARTIST_COL - 1],
+            album  = values[ALBUM_COL - 1],
+            score  = values[SCORE_COL - 1]
         )
     except Exception as e:
         print('fail')
@@ -82,7 +82,7 @@ def retrieve_artist(artist_name):
                 continue
             values = sheet.row_values(cell.row)
 
-            temp_artist = values[ARTIST_COL]
+            temp_artist = values[ARTIST_COL - 1]
             if len(temp_artist) < len(artist):
                 artist = temp_artist
 
