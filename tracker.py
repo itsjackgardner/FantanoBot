@@ -3,10 +3,10 @@ import praw
 
 def login():
     client = praw.Reddit(
-        username      = os.environ['REDDIT_USER'],
-        password      = os.environ['REDDIT_PASS'],
-        client_id     = os.environ['CLIENT_ID'],
-        client_secret = os.environ['CLIENT_SECRET'],
+        username      = os.environ.get('REDDIT_USER'),
+        password      = os.environ.get('REDDIT_PASS'),
+        client_id     = os.environ.get('CLIENT_ID'),
+        client_secret = os.environ.get('CLIENT_SECRET'),
         user_agent    = 'FantanoBot tracker'
     )
     return client
