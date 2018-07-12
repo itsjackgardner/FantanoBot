@@ -17,7 +17,7 @@ def run(client):
             msg = "**Score:** {score}\n**Comment:** {body}\n**Link:** {link}".format(
                 score = comment.score,
                 body  = comment.body,
-                link  = comment.permalink
+                link  = 'https://reddit.com' + comment.permalink
             )
             client.user.me().message('Contentious Response', msg)
 

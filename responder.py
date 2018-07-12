@@ -72,6 +72,7 @@ def retrieve_artist(artist_name):
     try:
         albums = []
         found = sheet.findall(artist_name)
+        assert(len(found) > 0)
 
         # Artist name, always smallest because of collaborative albums
         artist = sheet.cell(found[0].row, ARTIST_COL).value
@@ -123,7 +124,7 @@ def run(client):
         if bot_call is None:
             continue
 
-        print('found comment:', comment.id)
+        print('found comment: https://reddit.com' + comment.permalink)
         print('term:', bot_call.group(1))
         term = bot_call.group(1).strip()
 
