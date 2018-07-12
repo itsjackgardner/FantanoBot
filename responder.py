@@ -137,8 +137,8 @@ def run(client):
 
         if response is not None:
             print(response)
-            # comment.reply(response + FOOTER)
-            # db.set(str(comment.id), "True")
+            comment.reply(response + FOOTER)
+            db.set(str(comment.id), "True")
             print("replied")
 
 client = login()
