@@ -20,6 +20,7 @@ def run(client):
                 link  = 'https://reddit.com' + comment.permalink
             )
             client.user.me().message('Contentious Response', msg)
+            print("Contentious score:\n\n" + msg)
 
 client = login()
 run(client)
