@@ -93,7 +93,10 @@ def retrieve_artist(artist_name):
 
         assert(len(albums) > 0)
         print('success')
-        return "Fantano's album scores for *{0}*:\n\n{1}".format(artist, '  \n'.join(albums))
+        return "Fantano's album scores for *{artist}*:\n\n{albums}".format(
+            artist = artist,
+            albums = '  \n'.join(albums)
+        )
     except Exception as e:
         print('fail')
         print(e)
@@ -127,20 +130,23 @@ def run(client):
         print('found comment: https://reddit.com' + comment.permalink)
         print('term:', bot_call.group(1))
         term = bot_call.group(1).strip()
+        new_term = term
 
         # Make replacements for ampersand usage
         if 'and' in term:
-            term = term.replace('and', '(and|&)')
+            new_term = term.replace('and', '(and|&)')
         elif '&' in term:
-            term = term.replace('&', '(and|&)')
+            new_term = term.replace('&', '(and|&)')
 
-        response = retrieve(term)
+        response = retrieve(new_term)
 
-        if response is not None:
-            print(response)
-            # comment.reply(response + FOOTER)
-            # db.set(str(comment.id), "True")
-            print("replied")
+        if response is None:
+            response = "Could not find anything for *{term}*".format(term = term)
+        print(response)
+        comment.reply(response + FOOTER)
+        db.set(str(comment.id), "True")
+        print("replied")
+
 
 client = login()
 run(client)
