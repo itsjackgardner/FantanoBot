@@ -102,6 +102,14 @@ def retrieve_artist(artist_name):
         print(e)
         return None
 
+def ampersand_replacement(term):
+    # Make replacements for ampersand usage
+    if 'and' in term:
+        term = term.replace('and', '(and|&)')
+    elif '&' in term:
+        term = term.replace('&', '(and|&)')
+    return term
+
 def login():
     print('logging in ...')
     client = praw.Reddit(
@@ -115,6 +123,11 @@ def login():
 
 def run(client):
     print('running ...')
+    check_comments(client)
+    check_messages(client)
+
+def check_comments(client):
+    print('Checking comments ...')
     for comment in client.subreddit(SUBREDDITS).comments(limit=None):
 
         # Check if replied to
@@ -130,22 +143,35 @@ def run(client):
         print('found comment: https://reddit.com' + comment.permalink)
         print('term:', bot_call.group(1))
         term = bot_call.group(1).strip()
-        new_term = term
 
-        # Make replacements for ampersand usage
-        if 'and' in term:
-            new_term = term.replace('and', '(and|&)')
-        elif '&' in term:
-            new_term = term.replace('&', '(and|&)')
-
+        new_term = ampersand_replacement(term)
         response = retrieve(new_term)
 
         if response is None:
             response = "Could not find anything for *{term}*".format(term = term)
         print(response)
-        comment.reply(response + FOOTER)
-        db.set(str(comment.id), "True")
+        # comment.reply(response + FOOTER)
+        # db.set(str(comment.id), "True")
         print("replied")
+
+def check_messages(client):
+    print('Checking messages ...')
+    for item in client.inbox.all(limit=None):
+        if db.get(str(item.id)) is not None:
+            continue
+
+        if type(item) == praw.models.Message and '!fantanobot' in item.subject:
+            print("Message found: **{subject}** - {body}".format(
+                subject = item.subject,
+                body    = item.body
+            ))
+            term = ampersand_replacement(item.body)
+            response = retrieve(term)
+            if response is None:
+                response = "Could not find anything for *{term}*".format(term = item.body)
+            print(response)
+            item.author.message(item.body, response)
+            print("replied")
 
 
 client = login()
