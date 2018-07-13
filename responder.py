@@ -171,7 +171,7 @@ def check_messages(client):
                 response = "Could not find anything for *{term}*".format(term = item.body)
             print(response)
             item.author.message(item.body, response)
-            db.set(str(item.id),, "True")
+            db.set(str(item.id), "True")
             print("replied")
 
 
