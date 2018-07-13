@@ -150,8 +150,8 @@ def check_comments(client):
         if response is None:
             response = "Could not find anything for *{term}*".format(term = term)
         print(response)
-        # comment.reply(response + FOOTER)
-        # db.set(str(comment.id), "True")
+        comment.reply(response + FOOTER)
+        db.set(str(comment.id), "True")
         print("replied")
 
 def check_messages(client):
@@ -171,6 +171,7 @@ def check_messages(client):
                 response = "Could not find anything for *{term}*".format(term = item.body)
             print(response)
             item.author.message(item.body, response)
+            db.set(str(item.id),, "True")
             print("replied")
 
 
