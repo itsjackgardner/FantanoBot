@@ -170,12 +170,14 @@ def check_messages(client):
             if response is None:
                 response = "Could not find anything for *{term}*".format(term = item.body)
             print(response)
-            item.author.message(item.body, response)
+            item.reply(response)
             db.set(str(item.id), "True")
             print("replied")
 
 
 client = login()
 run(client)
+
+check_messages(client)
 
 print("COMPLETE")
