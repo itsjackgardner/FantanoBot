@@ -178,6 +178,4 @@ def check_messages(client):
 client = login()
 run(client)
 
-check_messages(client)
-
 print("COMPLETE")
