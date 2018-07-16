@@ -170,7 +170,7 @@ def check_messages(client):
             if response is None:
                 response = "Could not find anything for *{term}*".format(term = item.body)
             print(response)
-            item.reply(response)
+            item.reply(response + FOOTER)
             db.set(str(item.id), "True")
             print("replied")
 
