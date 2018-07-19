@@ -44,7 +44,10 @@ FOOTER = (
 
 # Try album then artist
 def retrieve(term):
-    regex = compile(term, IGNORECASE)
+    try:
+        regex = compile(term, IGNORECASE)
+    except:
+        return None
     print('retrieving album', term, '...')
     response = retrieve_album(regex)
     if response is None:
@@ -134,12 +137,8 @@ def check_comments(client):
         if db.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
 
-        try:
-            # search for bot command in comment
-            bot_call = COMMAND.search(comment.body)
-        except:
-            db.set(str(comment.id), 'True')
-            continue
+        # search for bot command in comment
+        bot_call = COMMAND.search(comment.body)
 
         if bot_call is None:
             continue
