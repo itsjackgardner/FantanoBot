@@ -81,8 +81,6 @@ def retrieve_artist(artist_name):
         albums = []
         artist = None
         for album in data:
-            if album[ARTIST_COL - 1].lower() == 'd.r.a.m.':
-                print(album)
             if artist_name.match(album[ARTIST_COL - 1]):
                 albums.append('{album} - **{score}**'.format(
                     album = album[ALBUM_COL - 1],
