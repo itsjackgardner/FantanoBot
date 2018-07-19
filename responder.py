@@ -2,7 +2,7 @@ import praw
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import bmemcached
-from re import compile, search, IGNORECASE
+from re import compile, search, match, IGNORECASE
 import time
 import os
 import json
@@ -27,6 +27,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_dict(
 )
 gc = gspread.authorize(credentials)
 sheet = gc.open_by_url(URL).worksheet('All Reviews')
+data = sheet.get_all_values()
 
 # Connect to Memcached DB (stores comment IDs)
 db = bmemcached.Client(
@@ -49,18 +50,20 @@ def retrieve(term):
     except:
         return None
     print('retrieving album', term, '...')
-    response = retrieve_album(regex, term)
+    response = retrieve_album(regex)
     if response is None:
         print('retrieving artist', term, '...')
-        response = retrieve_artist(regex, term)
+        response = retrieve_artist(regex)
     return response
 
-def retrieve_album(album_name, term):
+def retrieve_album(album_name):
+    global data
     try:
-        cell = sheet.find(album_name)
-        assert(cell.col == ALBUM_COL)
-        values = sheet.row_values(cell.row)
-        assert(len(values[1]) == len(term))
+        values = None
+        for album in data:
+            if album_name.match(album[1]):
+                values = album
+        assert(values is not None)
         print('success')
         return "Artist: *{artist}*  \nAlbum: {album}  \nScore: **{score}**".format(
             artist = values[ARTIST_COL - 1],
@@ -72,32 +75,23 @@ def retrieve_album(album_name, term):
         print(e)
         return None
 
-def retrieve_artist(artist_name, term):
+def retrieve_artist(artist_name):
+    global data
     try:
         albums = []
-        found = sheet.findall(artist_name)
-        assert(len(found) > 0)
+        artist = None
+        for album in data:
+            if artist_name.match(album[ARTIST_COL - 1]):
+                albums.append('{album} - **{score}**'.format(
+                    album = album[ALBUM_COL - 1],
+                    score = album[SCORE_COL - 1]
+                ))
 
-        # Artist name, always smallest because of collaborative albums
-        artist = sheet.cell(found[0].row, ARTIST_COL).value
+                temp_artist = album[ARTIST_COL - 1]
+                if artist is None or len(temp_artist) < len(artist):
+                    artist = temp_artist
 
-        for cell in found:
-            if cell.col != ARTIST_COL:
-                continue
-            values = sheet.row_values(cell.row)
-            if len(values[0]) != len(term):
-                continue
-
-            temp_artist = values[ARTIST_COL - 1]
-            if len(temp_artist) < len(artist):
-                artist = temp_artist
-
-            albums.append('{album} - **{score}**'.format(
-                album = values[ALBUM_COL - 1],
-                score = values[SCORE_COL - 1]
-            ))
-
-        assert(len(albums) > 0)
+        assert(artist is not None and len(albums) > 0)
         print('success')
         return "Fantano's album scores for *{artist}*:\n\n{albums}".format(
             artist = artist,
