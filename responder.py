@@ -49,17 +49,18 @@ def retrieve(term):
     except:
         return None
     print('retrieving album', term, '...')
-    response = retrieve_album(regex)
+    response = retrieve_album(regex, term)
     if response is None:
         print('retrieving artist', term, '...')
-        response = retrieve_artist(regex)
+        response = retrieve_artist(regex, term)
     return response
 
-def retrieve_album(album_name):
+def retrieve_album(album_name, term):
     try:
         cell = sheet.find(album_name)
         assert(cell.col == ALBUM_COL)
         values = sheet.row_values(cell.row)
+        assert(len(values[1]) == len(term))
         print('success')
         return "Artist: *{artist}*  \nAlbum: {album}  \nScore: **{score}**".format(
             artist = values[ARTIST_COL - 1],
@@ -71,7 +72,7 @@ def retrieve_album(album_name):
         print(e)
         return None
 
-def retrieve_artist(artist_name):
+def retrieve_artist(artist_name, term):
     try:
         albums = []
         found = sheet.findall(artist_name)
@@ -84,6 +85,8 @@ def retrieve_artist(artist_name):
             if cell.col != ARTIST_COL:
                 continue
             values = sheet.row_values(cell.row)
+            if len(values[0]) != len(term):
+                continue
 
             temp_artist = values[ARTIST_COL - 1]
             if len(temp_artist) < len(artist):
