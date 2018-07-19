@@ -2,7 +2,7 @@ import praw
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import bmemcached
-from re import compile, search, match, IGNORECASE
+import re
 import time
 import os
 import json
@@ -12,7 +12,7 @@ ALBUM_COL = 2
 SCORE_COL = 3
 
 SUBREDDITS = 'fantanoforever+hiphopheads'
-COMMAND = compile('!fantanobot (.*)', IGNORECASE)
+COMMAND = re.compile('!fantanobot (.*)', re.IGNORECASE)
 
 URL = 'https://docs.google.com/spreadsheets/d/1GbGyWVtePH8RZCZd7N3RPDh8m-K6hgO6AyKsAHZpbeQ/edit#gid=0'
 ACCOUNT = 'fantanobot@fantanobot.iam.gserviceaccount.com'
@@ -46,7 +46,7 @@ FOOTER = (
 # Try album then artist
 def retrieve(term):
     try:
-        regex = compile(term, IGNORECASE)
+        regex = re.compile(term, re.IGNORECASE)
     except:
         return None
     print('retrieving album', term, '...')
@@ -81,6 +81,8 @@ def retrieve_artist(artist_name):
         albums = []
         artist = None
         for album in data:
+            if album[ARTIST_COL - 1].lower() == 'd.r.a.m.':
+                print(album)
             if artist_name.match(album[ARTIST_COL - 1]):
                 albums.append('{album} - **{score}**'.format(
                     album = album[ALBUM_COL - 1],
