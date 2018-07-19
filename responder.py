@@ -127,15 +127,19 @@ def run(client):
     check_messages(client)
 
 def check_comments(client):
-    print('Checking comments ...')
+    print('checking comments ...')
     for comment in client.subreddit(SUBREDDITS).comments(limit=None):
 
         # Check if replied to
         if db.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
 
-        # search for bot command in comment
-        bot_call = COMMAND.search(comment.body)
+        try:
+            # search for bot command in comment
+            bot_call = COMMAND.search(comment.body)
+        except:
+            db.set(str(comment.id), 'True')
+            continue
 
         if bot_call is None:
             continue
@@ -151,11 +155,11 @@ def check_comments(client):
             response = "Could not find anything for *{term}*".format(term = term)
         print(response)
         comment.reply(response + FOOTER)
-        db.set(str(comment.id), "True")
-        print("replied")
+        db.set(str(comment.id), 'True')
+        print('replied')
 
 def check_messages(client):
-    print('Checking messages ...')
+    print('checking messages ...')
     for item in client.inbox.all(limit=None):
         if db.get(str(item.id)) is not None:
             continue
@@ -171,11 +175,11 @@ def check_messages(client):
                 response = "Could not find anything for *{term}*".format(term = item.body)
             print(response)
             item.reply(response + FOOTER)
-            db.set(str(item.id), "True")
-            print("replied")
+            db.set(str(item.id), 'True')
+            print('replied')
 
 
 client = login()
 run(client)
 
-print("COMPLETE")
+print('COMPLETE')
