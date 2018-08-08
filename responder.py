@@ -129,7 +129,6 @@ def run(client):
         time.sleep(10)
 
 def check_comments(client):
-    print('checking comments ...')
     for comment in client.subreddit(SUBREDDITS).comments(limit=None):
 
         # Check if replied to
@@ -157,7 +156,6 @@ def check_comments(client):
         print('replied')
 
 def check_messages(client):
-    print('checking messages ...')
     for item in client.inbox.all(limit=None):
         if db.get(str(item.id)) is not None:
             continue
