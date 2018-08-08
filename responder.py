@@ -123,8 +123,10 @@ def login():
 
 def run(client):
     print('running ...')
-    check_comments(client)
-    check_messages(client)
+    while True:
+        check_comments(client)
+        check_messages(client)
+        time.sleep(10)
 
 def check_comments(client):
     print('checking comments ...')
