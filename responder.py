@@ -6,6 +6,7 @@ import re
 import time
 import os
 import json
+import threading
 
 ARTIST_COL = 1
 ALBUM_COL = 2
@@ -110,27 +111,8 @@ def ampersand_replacement(term):
         term = term.replace('&', '(and|&)')
     return term
 
-def login():
-    print('logging in ...')
-    client = praw.Reddit(
-        username      = os.environ.get('REDDIT_USER'),
-        password      = os.environ.get('REDDIT_PASS'),
-        client_id     = os.environ.get('CLIENT_ID'),
-        client_secret = os.environ.get('CLIENT_SECRET'),
-        user_agent    = 'FantanoBot responder'
-    )
-    return client
-
-def run(client):
-    print('running ...')
-    while True:
-        check_comments(client)
-        check_messages(client)
-        time.sleep(10)
-
 def check_comments(client):
-    for comment in client.subreddit(SUBREDDITS).comments(limit=None):
-
+    for comment in client.subreddit(SUBREDDITS).stream.comments():
         # Check if replied to
         if db.get(str(comment.id)) is not None or comment.author == client.user.me():
             continue
@@ -156,7 +138,7 @@ def check_comments(client):
         print('replied')
 
 def check_messages(client):
-    for item in client.inbox.all(limit=None):
+    for item in client.inbox.stream():
         if db.get(str(item.id)) is not None:
             continue
 
@@ -174,8 +156,25 @@ def check_messages(client):
             db.set(str(item.id), 'True')
             print('replied')
 
+def login():
+    print('logging in ...')
+    client = praw.Reddit(
+        username=os.environ.get('REDDIT_USER'),
+        password=os.environ.get('REDDIT_PASS'),
+        client_id=os.environ.get('CLIENT_ID'),
+        client_secret=os.environ.get('CLIENT_SECRET'),
+        user_agent='FantanoBot responder'
+    )
+    return client
 
-client = login()
-run(client)
+def run(client):
+    print('running ...')
+    comment_thread = threading.Thread(target=check_comments, args=(client,))
+    message_thread = threading.Thread(target=check_messages, args=(client,))
+    comment_thread.start()
+    message_thread.start()
 
-print('COMPLETE')
+
+if __name__ == '__main__':
+    client = login()
+    run(client)
