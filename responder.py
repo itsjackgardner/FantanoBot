@@ -8,9 +8,9 @@ import os
 import json
 import threading
 
-ARTIST_COL = 1
-ALBUM_COL = 2
-SCORE_COL = 3
+ARTIST_COL = 0
+ALBUM_COL  = 1
+SCORE_COL  = 2
 
 SUBREDDITS = 'fantanoforever+hiphopheads'
 COMMAND = re.compile('!fantanobot (.*)', re.IGNORECASE)
@@ -23,7 +23,7 @@ print('INITIALISING ...')
 # Connect to google spreadsheet
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-    json.loads(os.environ.get('CREDENTIALS')),
+    json.loads(os.environ['CREDENTIALS']),
     scope
 )
 gc = gspread.authorize(credentials)
@@ -32,9 +32,9 @@ data = sheet.get_all_values()
 
 # Connect to Memcached DB (stores comment IDs)
 db = bmemcached.Client(
-    os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
-    os.environ.get('MEMCACHEDCLOUD_USERNAME'),
-    os.environ.get('MEMCACHEDCLOUD_PASSWORD')
+    os.environ['MEMCACHEDCLOUD_SERVERS'].split(','),
+    os.environ['MEMCACHEDCLOUD_USERNAME'],
+    os.environ['MEMCACHEDCLOUD_PASSWORD']
 )
 
 FOOTER = (
@@ -67,9 +67,9 @@ def retrieve_album(album_name):
         assert(values is not None)
         print('success')
         return "Artist: *{artist}*  \nAlbum: {album}  \nScore: **{score}**".format(
-            artist = values[ARTIST_COL - 1],
-            album  = values[ALBUM_COL - 1],
-            score  = values[SCORE_COL - 1]
+            artist = values[ARTIST_COL],
+            album  = values[ALBUM_COL],
+            score  = values[SCORE_COL]
         )
     except Exception as e:
         print('fail')
@@ -82,13 +82,13 @@ def retrieve_artist(artist_name):
         albums = []
         artist = None
         for album in data:
-            if artist_name.match(album[ARTIST_COL - 1]):
+            if artist_name.match(album[ARTIST_COL]):
                 albums.append('{album} - **{score}**'.format(
-                    album = album[ALBUM_COL - 1],
-                    score = album[SCORE_COL - 1]
+                    album = album[ALBUM_COL],
+                    score = album[SCORE_COL]
                 ))
 
-                temp_artist = album[ARTIST_COL - 1]
+                temp_artist = album[ARTIST_COL]
                 if artist is None or len(temp_artist) < len(artist):
                     artist = temp_artist
 
@@ -159,11 +159,11 @@ def check_messages(client):
 def login():
     print('logging in ...')
     client = praw.Reddit(
-        username=os.environ.get('REDDIT_USER'),
-        password=os.environ.get('REDDIT_PASS'),
-        client_id=os.environ.get('CLIENT_ID'),
-        client_secret=os.environ.get('CLIENT_SECRET'),
-        user_agent='FantanoBot responder'
+        username      = os.environ['REDDIT_USER'],
+        password      = os.environ['REDDIT_PASS'],
+        client_id     = os.environ['CLIENT_ID'],
+        client_secret = os.environ['CLIENT_SECRET'],
+        user_agent    = 'FantanoBot responder'
     )
     return client
 
