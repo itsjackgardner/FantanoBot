@@ -38,11 +38,11 @@ db = bmemcached.Client(
 )
 
 FOOTER = (
-    "\n\nAll scores sourced from [here]({link}).\n\n"
+    "\n\nAll scores sourced from [here]({data_link}).\n\n"
     "---\n"
     "^(I am a bot and this action was performed automatically)  \n"
-    "^(Send me a PM to provide feedback)"
-).format(link = URL)
+    "^(Send [my creater a PM]({pm_link}) to provide feedback)"
+).format(data_link = URL, pm_link = "https://www.reddit.com/message/compose/?to=NobleLordOfLaziness")
 
 # Try album then artist
 def retrieve(term):
