@@ -41,7 +41,7 @@ FOOTER = (
     "\n\nAll scores sourced from [here]({data_link}).\n\n"
     "---\n"
     "^(I am a bot and this action was performed automatically)  \n"
-    "^(Send [my creater a PM]({pm_link}) to provide feedback)"
+    "[^Send ^my ^creater ^a ^PM]({pm_link}) ^(to provide feedback)"
 ).format(data_link = URL, pm_link = "https://www.reddit.com/message/compose/?to=NobleLordOfLaziness")
 
 # Try album then artist
